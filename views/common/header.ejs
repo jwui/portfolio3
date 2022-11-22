@@ -1,0 +1,35 @@
+<div id="header">
+  <div class="left">
+    <h1 class="logo"><img src="/img/logo.svg" /></h1>
+    <div class="gnb">
+      <ul class="menulist">
+        <li><a href="#">메뉴</a></li>
+        <li><a href="#">매장</a></li>
+        <li><a href="#">이벤트</a></li>
+        <li><a href="#">공지</a></li>
+        <li><a href="#">문의게시판</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="right">
+    <div class="icons">
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+    </div>
+    <div class="btns">
+      <a href="#">관리자페이지</a>
+      <a href="#">로그인</a>
+    </div>
+  </div>
+</div>
+<script>
+  let header = document.querySelector("#header");
+  window.addEventListener("scroll", () => {
+    if (scrollY > 20) {
+      header.style.height = "80px";
+    } else {
+      header.style.height = "100px";
+    }
+  });
+</script>
