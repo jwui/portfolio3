@@ -45,9 +45,10 @@
       type="text/css"
     />
     <script src="/themes/1/js-image-slider.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
   </head>
   <body>
-    <div id="indexcont">
+    <div id="indexwrapper">
       <%- include("common/header.ejs") %>
       <div id="sliderFrame">
         <div class="image"><img src="img/잇츠야미_메인.png" /></div>
@@ -57,11 +58,146 @@
           <img src="/img/bg3.jpg" />
         </div>
       </div>
-      <div class="video">
-        <video width="1280" height="720" autoplay loop muted>
+      <div class="video" data-aos="fade-in" data-aos-duration="1000">
+        <video width="100%" height="100%" autoplay loop muted>
           <source src="/img/vid1.mp4" type="video/mp4" />
         </video>
       </div>
+      <div id="cont1">
+        <div class="contents">
+          <h2 data-aos="fade-up" data-aos-duration="1000">
+            About <span>YUMSEM</span>
+          </h2>
+          <p>
+            <span>얌샘맛으로 날마다 행복!</span> 날마다 든든하게, 매일 색다른
+            얌샘맛을 즐기세요.
+          </p>
+        </div>
+        <div class="cardscont">
+          <a class="cards card1" href="#">
+            <div class="context">
+              <h2>MENU</h2>
+              <p>남녀노소 취향저격 얌샘 메뉴</p>
+            </div>
+          </a>
+          <a class="cards card2" href="#">
+            <div class="context">
+              <h2>STORE</h2>
+              <p>우리동네 얌샘김밥 찾기</p>
+            </div>
+          </a>
+          <a class="cards card3" href="#">
+            <div class="context">
+              <h2>EVENT</h2>
+              <p>지금 진행중인 이벤트 참여하기</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div id="cont2">
+        <div class="contents">
+          <h2 data-aos="fade-down" data-aos-duration="1000">
+            얌샘김밥 <span>유튜브 광고</span>
+          </h2>
+        </div>
+        <div class="videocont">
+          <div class="column1">
+            <iframe
+              width="100%"
+              height="80%"
+              src="https://www.youtube.com/embed/JY_slCZNSiA"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+            <div class="contextlarge">
+              <h2>유튜버 '아미아미'의 얌샘김밥 9가지메뉴,</h2>
+              <h2>신메뉴 프리미트 김밥 간단하게 먹방!</h2>
+            </div>
+          </div>
+          <div class="column2">
+            <div class="cell">
+              <iframe
+                width="100%"
+                height="80%"
+                src="https://www.youtube.com/embed/R-aOqM46nys"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+              <div class="contextssmall">
+                <h2>유튜버 ‘효닝’ 얌샘김밥 신메뉴 먹방</h2>
+              </div>
+            </div>
+            <div class="cell">
+              <iframe
+                width="100%"
+                height="80%"
+                src="https://www.youtube.com/embed/Ug4pJ9qE4EI"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+              <div class="contextssmall">
+                <h2>수능금지곡 힙합댄스팀</h2>
+                <h2>유튜브광고</h2>
+              </div>
+            </div>
+          </div>
+          <div class="column3">
+            <div class="cell">
+              <iframe
+                width="100%"
+                height="80%"
+                src="https://www.youtube.com/embed/D2IJ3DGkuXg"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+              <div class="contextssmall">
+                <h2>유튜버 ‘하느르’ 메가김밥 외 얌샘김밥 메뉴 먹방</h2>
+              </div>
+            </div>
+            <div class="cell">
+              <iframe
+                width="100%"
+                height="80%"
+                src="https://www.youtube.com/embed/ehPbh6cIQ4w"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+              <div class="contextssmall">
+                <h2>중독성 먹방 광고</h2>
+                <h2>유노얌샘?</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="cont3">
+        <div class="titleimg" data-aos="flip-left" data-aos-duration="1000">
+          <img src="/img/instagram.png" />
+        </div>
+        <div class="instacont">
+          <a href="#"><img src="/img/img1.jpg" /></a>
+          <a href="#"><img src="/img/img2.jpg" /></a>
+          <a href="#"><img src="/img/img3.jpg" /></a>
+          <a href="#"><img src="/img/img4.jpg" /></a>
+          <a href="#"><img src="/img/img5.jpg" /></a>
+          <a href="#"><img src="/img/img6.jpg" /></a>
+          <a href="#"><img src="/img/img7.jpg" /></a>
+          <a href="#"><img src="/img/img8.jpg" /></a>
+          <a href="#"><img src="/img/img9.jpg" /></a>
+          <a href="#"><img src="/img/img10.jpg" /></a>
+        </div>
+      </div>
+      <%- include("common/footer.ejs") %>
     </div>
     <script>
       var swiper = new Swiper(".mySwiper", {
@@ -81,6 +217,31 @@
           prevEl: ".swiper-button-prev",
         },
       });
+    </script>
+    <script>
+      var slideUp1 = {
+        distance: "150%",
+        origin: "bottom",
+        opacity: null,
+      };
+      var slideUp2 = {
+        distance: "150%",
+        origin: "bottom",
+        opacity: null,
+        delay: 100,
+      };
+      var slideUp3 = {
+        distance: "150%",
+        origin: "bottom",
+        opacity: null,
+        delay: 200,
+      };
+      ScrollReveal().reveal(".cardscont .cards.card1", slideUp1);
+      ScrollReveal().reveal(".cardscont .cards.card2", slideUp2);
+      ScrollReveal().reveal(".cardscont .cards.card3", slideUp3);
+    </script>
+    <script>
+      AOS.init({ once: true });
     </script>
   </body>
 </html>
