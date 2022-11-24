@@ -1,4 +1,10 @@
 <!--로그인 확인기능 구간-->
+<% if(userData.userId != "admin") { %>
+<script>
+  alert("관리자만 접근할 수 있는 페이지입니다");
+  location.href = "/";
+</script>
+<% } %>
 
 <!DOCTYPE html>
 <html lang="en">
