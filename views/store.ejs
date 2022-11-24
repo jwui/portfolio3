@@ -151,7 +151,7 @@
     <%- include("common/footer.ejs") %>
     <script
       type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7852e44ce20118fba7f83a98ca9f220e
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ff9c5c9123c5e17b90054b90048b8c4a
       "
     ></script>
     <script>
@@ -177,6 +177,7 @@
           infoPhone.innerHTML = phone;
           modalWindow.classList.toggle("on");
           modalBg.classList.toggle("on");
+
           var mapContainer = document.getElementById("map"), // 지도를 표시할 div
             mapOption = {
               center: new kakao.maps.LatLng(coord), // 지도의 중심좌표
