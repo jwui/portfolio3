@@ -171,13 +171,13 @@
           let title = item.getAttribute("data-title");
           let address = item.getAttribute("data-address");
           let phone = item.getAttribute("data-phone");
-          let coord = item.getAttribute("data-coordinates");
+          let coord = item.getAttribute(Number("data-coordinates"));
           modalTitle.innerHTML = title;
           infoAddress.innerHTML = address;
           infoPhone.innerHTML = phone;
           modalWindow.classList.toggle("on");
           modalBg.classList.toggle("on");
-          console.log(Number(coord));
+          console.log(coord);
           var mapContainer = document.getElementById("map"), // 지도를 표시할 div
             mapOption = {
               center: new kakao.maps.LatLng(coord), // 지도의 중심좌표
