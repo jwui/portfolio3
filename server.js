@@ -5,6 +5,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
 const multer = require("multer");
+const moment = require("moment-timezone");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -90,7 +91,7 @@ passport.deserializeUser(function (userId, done) {
 
 //관리자 화면 로그인 유무 확인
 app.post(
-  "/admin",
+  "/login",
   passport.authenticate("local", { failureRedirect: "/fail" }),
   (req, res) => {
     if (req.user.userId == "admin") {
@@ -98,7 +99,7 @@ app.post(
       console.log(req.user);
       //로그인 성공시 관리자 매장등록 페이지로 이동
     } else {
-      res.redirect("/admin/store");
+      res.redirect("/");
     }
   }
 );
@@ -264,19 +265,13 @@ app.get("/admin/events", function (req, res) {
   db.collection("port3_events")
     .find()
     .toArray(function (err, result) {
-      res.render("events", { eventData: result, userData: req.user });
+      res.render("admin_events", { eventData: result, userData: req.user });
     });
   //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
 });
 
-//이벤트 작성 페이지 get 요청
-app.get("/admin/eventinsert", function (req, res) {
-  //이벤트 작성페이지 ejs 파일 응답
-  res.render("eventupt", { userData: req.user });
-});
-
 //게시글 작성 후 데이터베이스에 넣는 작업 요청
-app.post("/add", upload.single("filetest"), function (req, res) {
+app.post("/addevent", upload.single("filetest"), function (req, res) {
   console.log(req.file);
   if (req.file) {
     fileUpload = req.file.originalname;
@@ -289,21 +284,237 @@ app.post("/add", upload.single("filetest"), function (req, res) {
     function (err, result1) {
       db.collection("port3_events").insertOne(
         {
-          brdid: result1.totalBoard + 1,
-          brdtitle: req.body.title,
-          brdcontext: req.body.context,
-          fileName: fileUpload,
+          num: result1.eventCount + 1,
+          name: req.body.name,
+          content: req.body.content,
+          thumbnail: fileUpload,
+          date: moment().tz("Asia/Seoul").format("YYYY-MM-DD"),
         },
         function (err, result2) {
           db.collection("port3_count").updateOne(
             { name: "이벤트등록" },
-            { $inc: { totalBoard: 1 } },
+            { $inc: { eventCount: 1 } },
             function (err, result3) {
-              res.redirect("/admin/events" + (result1.totalBoard + 1)); //게시글 작성 후 게시글 목록경로 요청
+              res.redirect("/admin/events");
             }
           );
         }
       );
+    }
+  );
+});
+
+//관리자 이벤트 삭제처리 get 요청
+app.get("/deleteevent/:no", function (req, res) {
+  //db안에 해당 매장 번호에 맞는 데이터만 삭제 처리
+  db.collection("port3_events").deleteOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      //매장 목록페이지로 이동
+      res.redirect("/admin/events");
+    }
+  );
+});
+
+//이벤트 수정화면 페이지 get 요청
+app.get("/eventsupt/:no", function (req, res) {
+  //db안에 해당 게시글번호에 맞는 데이터를 꺼내오고 ejs파일로 응답
+  db.collection("port3_events").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("admin_eventsupt", {
+        eventData: result,
+        userData: req.user,
+      });
+    }
+  );
+  //input, textarea에다가 작성내용 미리 보여줌
+});
+
+//이벤트 수정사항 db에 적용하는 구간
+app.post("/updateevent", upload.single("filetest"), function (req, res) {
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = req.body.fileOrigin;
+  }
+  db.collection("port3_events").updateOne(
+    { num: Number(req.body.num) },
+    {
+      $set: {
+        name: req.body.name,
+        content: req.body.content,
+        thumbnail: fileUpload,
+      },
+    },
+    //이벤트 페이지로 이동
+    function (err, result) {
+      res.redirect("/admin/events");
+    }
+  );
+});
+
+//사용자 이벤트 목록 요청
+app.get("/events", (req, res) => {
+  db.collection("port3_events")
+    .find()
+    .toArray(function (err, result) {
+      res.render("events", {
+        eventData: result,
+        userData: req.user,
+      });
+    });
+});
+
+//이벤트 상세화면 get 요청  /:변수명  작명가능
+//db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
+app.get("/eventdetail/:no", function (req, res) {
+  if (!req.user) {
+    res.send(
+      "<script>alert('로그인한 회원만 이용가능합니다'); location.href='/login';</script>"
+    );
+  } else {
+    db.collection("port3_events").findOne(
+      { num: Number(req.params.no) },
+      function (err, result) {
+        res.render("eventdetail", {
+          eventData: result,
+          userData: req.user,
+        });
+      }
+    );
+  }
+});
+
+//사용자 메뉴 목록 요청
+app.get("/menus", (req, res) => {
+  db.collection("port3_menus")
+    .find()
+    .toArray(function (err, result) {
+      res.render("menus", {
+        menuData: result,
+        userData: req.user,
+      });
+    });
+});
+
+//메뉴 상세화면 get 요청  /:변수명  작명가능
+//db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
+app.get("/menudetail/:no", function (req, res) {
+  if (!req.user) {
+    res.send(
+      "<script>alert('로그인한 회원만 이용가능합니다'); location.href='/login';</script>"
+    );
+  } else {
+    db.collection("port3_menus").findOne(
+      { num: Number(req.params.no) },
+      function (err, result1) {
+        res.render(
+          "menudetail",
+          {
+            menuData: result1,
+            userData: req.user,
+          },
+          function (err, result2) {
+            db.collection("port3_menus").findOne();
+          }
+        );
+      }
+    );
+  }
+});
+
+//관리자 메뉴 목록 get 요청
+app.get("/admin/menus", function (req, res) {
+  db.collection("port3_menus")
+    .find()
+    .toArray(function (err, result) {
+      res.render("admin_menus", { menuData: result, userData: req.user });
+    });
+  //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
+});
+
+//게시글 작성 후 데이터베이스에 넣는 작업 요청
+app.post("/addmenu", upload.single("filetest"), function (req, res) {
+  console.log(req.file);
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = null;
+  }
+
+  db.collection("port3_count").findOne(
+    { name: "메뉴등록" },
+    function (err, result1) {
+      db.collection("port3_menus").insertOne(
+        {
+          num: result1.menuCount + 1,
+          name: req.body.name,
+          content: req.body.content,
+          thumbnail: fileUpload,
+          recom: req.body.recom,
+        },
+        function (err, result2) {
+          db.collection("port3_count").updateOne(
+            { name: "메뉴등록" },
+            { $inc: { menuCount: 1 } },
+            function (err, result3) {
+              res.redirect("/admin/menus");
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+//관리자 메뉴 삭제처리 get 요청
+app.get("/deletemenu/:no", function (req, res) {
+  //db안에 해당 매장 번호에 맞는 데이터만 삭제 처리
+  db.collection("port3_menus").deleteOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      //매장 목록페이지로 이동
+      res.redirect("/admin/menus");
+    }
+  );
+});
+
+//메뉴 수정화면 페이지 get 요청
+app.get("/menuupt/:no", function (req, res) {
+  //db안에 해당 게시글번호에 맞는 데이터를 꺼내오고 ejs파일로 응답
+  db.collection("port3_menus").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("admin_menusupt", {
+        menuData: result,
+        userData: req.user,
+      });
+    }
+  );
+  //input, textarea에다가 작성내용 미리 보여줌
+});
+
+//메뉴 수정사항 db에 적용하는 구간
+app.post("/updatemenu", upload.single("filetest"), function (req, res) {
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = req.body.fileOrigin;
+  }
+  db.collection("port3_menus").updateOne(
+    { num: Number(req.body.num) },
+    {
+      $set: {
+        name: req.body.name,
+        content: req.body.content,
+        thumbnail: fileUpload,
+        recom: req.body.recom,
+      },
+    },
+    //이벤트 페이지로 이동
+    function (err, result) {
+      res.redirect("/admin/menus");
     }
   );
 });

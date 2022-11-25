@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이벤트 상세페이지</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.3.2/countUp.umd.min.js"
+      integrity="sha512-Be9XaN4NvN8CVmbk4juf7JX2/87a7I37CX1WV37w+jyav4exBHDqHzmjs+Tbx7Dt2j9vpULDZNxcP0sZP03/WQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
+      integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link
+      href="/themes/1/js-image-slider.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="/themes/1/js-image-slider.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style></style>
+  </head>
+  <body>
+    <%- include("common/header.ejs") %>
+    <div id="eventsbg">
+      <h2>Events</h2>
+    </div>
+    <div id="eventsdetail">
+      <div class="title"><h1><%- eventData.name %></h1></div>
+      <div class="share">
+        <h2>Share This Post</h2>
+        <div class="iconscont">
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="detailcont">
+        <img src="/upload/<%- eventData.thumbnail %>" />
+        <p><%- eventData.content %></p>
+      </div>
+    </div>
+    <%- include("common/footer.ejs") %>
+  </body>
+</html>

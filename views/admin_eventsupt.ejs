@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이벤트 수정페이지</title>
+  </head>
+  <body>
+    <div id="upt_container">
+      <div class="brdupt">
+        <div class="title">이벤트 수정페이지</div>
+        <form action="/updateevent" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="num" value="<%- eventData.num %>" />
+          <label for="name">이벤트명</label>
+          <input type="text" name="name" value="<%- eventData.name %>" />
+          <label for="content">내용</label>
+          <input type="text" name="content" value="<%- eventData.content %>" />
+          <!-- 이미지 파일 수정 업로드-->
+          <input type="file" name="filetest" />
+          <input
+            type="hidden"
+            name="fileOrigin"
+            value="<%- eventData.thumbnail %>"
+          />
+          <button type="submit">게시글 수정</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

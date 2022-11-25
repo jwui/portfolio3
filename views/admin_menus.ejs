@@ -1,0 +1,73 @@
+<!--로그인 확인기능 구간-->
+<% if(userData.userId != "admin") { %>
+<script>
+  alert("관리자만 접근할 수 있는 페이지입니다");
+  location.href = "/";
+</script>
+<% } %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>관리자 메뉴등록 페이지</title>
+  </head>
+  <body>
+    <!--상품등록 페이지 a / 매장등록 페이지 a-->
+    <ul class="admin_menu">
+      <li><a href="/admin/store">매장등록 페이지</a></li>
+      <li><a href="/admin/events">이벤트등록 페이지</a></li>
+      <li><a href="/admin/menus">메뉴등록 페이지</a></li>
+    </ul>
+    <!--메뉴리스트 전부 보이는 구간-->
+    <div class="menusswrap">
+      <% for(let i = 0; i < menuData.length; i++) { %>
+      <div class="list" style="margin-bottom: 30px">
+        <div class="line">
+          <div>메뉴번호</div>
+          <div><%- menuData[i].num %></div>
+        </div>
+        <div class="line">
+          <div>메뉴명</div>
+          <div><%- menuData[i].name %></div>
+        </div>
+        <div class="line">
+          <div>내용</div>
+          <div><%- menuData[i].content %></div>
+        </div>
+        <div class="line">
+          <div>추천 메뉴</div>
+          <div><%- menuData[i].recom %></div>
+        </div>
+        <div class="line">
+          <div>첨부이미지</div>
+          <div><img src="/upload/<%- menuData[i].thumbnail %>" /></div>
+        </div>
+        <a href="/deletemenu/<%- menuData[i].num %>">삭제</a>
+        <a href="/menuupt/<%- menuData[i].num %>">수정</a>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="title">메뉴 추가하기</div>
+    <form
+      id="menun_form"
+      action="/addmenu"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="name">메뉴명</label>
+      <input type="text" name="name" />
+      <label for="content">메뉴 내용</label>
+      <textarea name="content"></textarea>
+      <label for="recom">추천 메뉴</label>
+      <input type="text" name="recom" />
+      <label for="filetest">첨부할 사진</label>
+      <input type="file" name="filetest" />
+      <button type="submit">게시글 작성</button>
+      <a href="/admin/menus">목록</a>
+    </form>
+  </body>
+</html>
