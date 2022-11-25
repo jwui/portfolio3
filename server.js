@@ -39,7 +39,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/login", (req, res) => {
-  res.render("admin_login"); // admin_login.ejs 파일로 응답
+  res.render("login"); // login.ejs 파일로 응답
 });
 
 //  /loginresult 경로 요청시 passport.autenticate() 함수구간이 아이디 비번 로그인 검증구간
@@ -93,9 +93,13 @@ app.post(
   "/admin",
   passport.authenticate("local", { failureRedirect: "/fail" }),
   (req, res) => {
-    res.redirect("/admin/store");
-    console.log(req.user);
-    //로그인 성공시 관리자 매장등록 페이지로 이동
+    if (req.user.userId == "admin") {
+      res.redirect("/admin/store");
+      console.log(req.user);
+      //로그인 성공시 관리자 매장등록 페이지로 이동
+    } else {
+      res.redirect("/admin/store");
+    }
   }
 );
 
