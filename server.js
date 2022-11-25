@@ -254,3 +254,52 @@ app.get("/store", async (req, res) => {
       });
     });
 });
+
+//이벤트 목록 get 요청
+app.get("/admin/events", function (req, res) {
+  db.collection("port3_events")
+    .find()
+    .toArray(function (err, result) {
+      res.render("events", { eventData: result, userData: req.user });
+    });
+  //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
+});
+
+//이벤트 작성 페이지 get 요청
+app.get("/admin/eventinsert", function (req, res) {
+  //이벤트 작성페이지 ejs 파일 응답
+  res.render("eventupt", { userData: req.user });
+});
+
+//게시글 작성 후 데이터베이스에 넣는 작업 요청
+app.post("/add", upload.single("filetest"), function (req, res) {
+  console.log(req.file);
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = null;
+  }
+
+  db.collection("port3_count").findOne(
+    { name: "이벤트등록" },
+    function (err, result1) {
+      db.collection("port3_events").insertOne(
+        {
+          brdid: result1.totalBoard + 1,
+          brdtitle: req.body.title,
+          brdcontext: req.body.context,
+          fileName: fileUpload,
+        },
+        function (err, result2) {
+          db.collection("port3_count").updateOne(
+            { name: "이벤트등록" },
+            { $inc: { totalBoard: 1 } },
+            function (err, result3) {
+              res.redirect("/admin/events" + (result1.totalBoard + 1)); //게시글 작성 후 게시글 목록경로 요청
+            }
+          );
+        }
+      );
+    }
+  );
+});

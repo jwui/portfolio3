@@ -420,22 +420,18 @@ body {
 #storecont .modalBg {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: -100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: none;
 }
 #storecont .modalBg.on {
-  display: block;
+  left: 0;
 }
 #storecont .modalWindow {
-  display: none;
   max-width: 1000px;
   width: 95%;
   background-color: #fff;
   position: fixed;
-  left: 50%;
+  left: -100%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
@@ -471,5 +467,5 @@ body {
   color: #555;
 }
 #storecont .modalWindow.on {
-  display: block;
+  left: 50%;
 }
