@@ -512,6 +512,7 @@ body {
   }
 }
 
+//이벤트 전체페이지 구간
 #eventscont {
   max-width: 1200px;
   width: 95%;
@@ -595,12 +596,61 @@ body {
   }
 }
 
-// <div class="share">
-//         <h2>Share This Post</h2>
-//         <div class="iconscont">
-//           <a href="#"><i class="fa-brands fa-facebook"></i></a>
-//           <a href="#"><i class="fa-brands fa-instagram"></i></a>
-//           <a href="#"><i class="fa-brands fa-twitter"></i></a>
-//           <a href="#"><i class="fa-solid fa-envelope"></i></a>
-//         </div>
-//       </div>
+//메뉴 전체페이지 구간
+
+#menusbg {
+  margin-top: 100px;
+  height: 400px;
+  background-image: url("/img/menusbg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 48px;
+    font-weight: 800;
+  }
+}
+
+#menusscont {
+  max-width: 1200px;
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  padding-top: 100px;
+}
+.card {
+  width: 350px;
+  height: 400px;
+  border: 1px solid #a7a7a7;
+  margin: 1%;
+  border-radius: 5px;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-bottom: 1px solid #a7a7a7;
+    box-sizing: border-box;
+  }
+  p {
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 700;
+    margin: 0 30px;
+    &:last-of-type {
+      color: #ff6d0d;
+      font-weight: 800;
+    }
+  }
+}

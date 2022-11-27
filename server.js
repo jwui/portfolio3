@@ -401,27 +401,19 @@ app.get("/menus", (req, res) => {
 //메뉴 상세화면 get 요청  /:변수명  작명가능
 //db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
 app.get("/menudetail/:no", function (req, res) {
-  if (!req.user) {
-    res.send(
-      "<script>alert('로그인한 회원만 이용가능합니다'); location.href='/login';</script>"
-    );
-  } else {
-    db.collection("port3_menus").findOne(
-      { num: Number(req.params.no) },
-      function (err, result1) {
-        res.render(
-          "menudetail",
-          {
+  db.collection("port3_menus").findOne(
+    { num: Number(req.params.no) },
+    (err, result1) => {
+      db.collection("port3_menus")
+        .find({ num: Number(req.params.no) }, { projection: { recom: 1 } })
+        .toArray((err, result2) => {
+          res.render("menudetail", {
             menuData: result1,
-            userData: req.user,
-          },
-          function (err, result2) {
-            db.collection("port3_menus").findOne();
-          }
-        );
-      }
-    );
-  }
+            recomData: result2,
+          });
+        });
+    }
+  );
 });
 
 //관리자 메뉴 목록 get 요청

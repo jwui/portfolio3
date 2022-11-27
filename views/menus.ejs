@@ -53,19 +53,18 @@
     <div id="menusbg">
       <h2>Menus</h2>
     </div>
-    <div id="eventscont">
+    <div id="menusscont">
       <% for(let i=0; i< menuData.length; i++) { %>
-
-      <div class="card" data-recom="<%- menuData[i].recom %>">
+      <div class="card">
         <a href="/menudetail/<%- menuData[i].num %>">
           <img src="/upload/<%- menuData[i].thumbnail %>" />
         </a>
         <p><%- menuData[i].name %></p>
-        <p id="recom"></p>
-        <div></div>
+        <p><%- menuData[i].price %></p>
       </div>
       <% } %>
     </div>
+
     <%- include("common/footer.ejs") %>
   </body>
 </html>
