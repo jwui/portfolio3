@@ -12,7 +12,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>관리자 이벤트등록 페이지</title>
+    <title>관리자 공지사항등록 페이지</title>
   </head>
   <body>
     <!--상품등록 페이지 a / 매장등록 페이지 a-->
@@ -22,44 +22,43 @@
       <li><a href="/admin/menus">메뉴등록 페이지</a></li>
       <li><a href="/admin/notice">공지사항등록 페이지</a></li>
     </ul>
-    <!--이벤트리스트 전부 보이는 구간-->
-    <div class="eventswrap">
-      <% for(let i = 0; i < eventData.length; i++) { %>
+    <!--공지사항 전부 보이는 구간-->
+    <div class="noticewrap">
+      <% for(let i = 0; i < noticeData.length; i++) { %>
       <div class="list" style="margin-bottom: 30px">
         <div class="line">
-          <div>이벤트번호</div>
-          <div><%- eventData[i].num %></div>
+          <div>공지사항 번호</div>
+          <div><%- noticeData[i].num %></div>
         </div>
         <div class="line">
-          <div>이벤트명</div>
-          <div><%- eventData[i].name %></div>
+          <div>공지사항 제목</div>
+          <div><%- noticeData[i].name %></div>
         </div>
-
         <div class="line">
           <div>내용</div>
-          <div><%- eventData[i].content %></div>
+          <div><%- noticeData[i].content %></div>
         </div>
         <div class="line">
           <div>첨부이미지</div>
-          <div><img src="/upload/<%- eventData[i].thumbnail %>" /></div>
+          <div><img src="/upload/<%- noticeData[i].thumbnail %>" /></div>
         </div>
 
-        <a href="/deleteevent/<%- eventData[i].num %>">삭제</a>
-        <a href="/eventsupt/<%- eventData[i].num %>">수정</a>
+        <a href="/deletenotice/<%- noticeData[i].num %>">삭제</a>
+        <a href="/noticeupt/<%- noticeData[i].num %>">수정</a>
       </div>
       <% } %>
     </div>
 
-    <div class="title">이벤트 추가하기</div>
+    <div class="title">공지사항 추가하기</div>
     <form
-      id="event_form"
-      action="/addevent"
+      id="notice_form"
+      action="/addnotice"
       method="post"
       enctype="multipart/form-data"
     >
-      <label for="name">이벤트명</label>
+      <label for="name">공지명</label>
       <input type="text" name="name" />
-      <label for="content">이벤트 내용</label>
+      <label for="content">공지 내용</label>
       <textarea name="content"></textarea>
       <label for="filetest">첨부할 사진</label>
       <input type="file" name="filetest" />

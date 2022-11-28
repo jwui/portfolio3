@@ -369,21 +369,15 @@ app.get("/events", (req, res) => {
 //이벤트 상세화면 get 요청  /:변수명  작명가능
 //db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
 app.get("/eventdetail/:no", function (req, res) {
-  if (!req.user) {
-    res.send(
-      "<script>alert('로그인한 회원만 이용가능합니다'); location.href='/login';</script>"
-    );
-  } else {
-    db.collection("port3_events").findOne(
-      { num: Number(req.params.no) },
-      function (err, result) {
-        res.render("eventdetail", {
-          eventData: result,
-          userData: req.user,
-        });
-      }
-    );
-  }
+  db.collection("port3_events").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("eventdetail", {
+        eventData: result,
+        userData: req.user,
+      });
+    }
+  );
 });
 
 //사용자 메뉴 목록 요청
@@ -405,12 +399,11 @@ app.get("/menudetail/:no", function (req, res) {
     { num: Number(req.params.no) },
     (err, result1) => {
       db.collection("port3_menus")
-        .find({ num: Number(req.params.no) }, { projection: { recom: 1 } })
+        .find({
+          name: { $in: [...result1.recom] },
+        })
         .toArray((err, result2) => {
-          res.render("menudetail", {
-            menuData: result1,
-            recomData: result2,
-          });
+          res.send({ menuData: result1, recomData: result2 });
         });
     }
   );
@@ -426,7 +419,7 @@ app.get("/admin/menus", function (req, res) {
   //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
 });
 
-//게시글 작성 후 데이터베이스에 넣는 작업 요청
+//메뉴 작성 후 데이터베이스에 넣는 작업 요청
 app.post("/addmenu", upload.single("filetest"), function (req, res) {
   console.log(req.file);
   if (req.file) {
@@ -504,9 +497,220 @@ app.post("/updatemenu", upload.single("filetest"), function (req, res) {
         recom: req.body.recom,
       },
     },
-    //이벤트 페이지로 이동
+    //메뉴 페이지로 이동
     function (err, result) {
       res.redirect("/admin/menus");
+    }
+  );
+});
+
+//관리자 공지사항 목록 get 요청
+app.get("/admin/notice", function (req, res) {
+  db.collection("port3_notice")
+    .find()
+    .toArray(function (err, result) {
+      res.render("admin_notice", { noticeData: result, userData: req.user });
+    });
+  //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
+});
+
+//공지사항 작성 후 데이터베이스에 넣는 작업 요청
+app.post("/addnotice", upload.single("filetest"), function (req, res) {
+  console.log(req.file);
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = null;
+  }
+  db.collection("port3_count").findOne(
+    { name: "공지등록" },
+    function (err, result1) {
+      db.collection("port3_notice").insertOne(
+        {
+          num: result1.noticeCount + 1,
+          name: req.body.name,
+          content: req.body.content,
+          views: 0,
+          user: req.user.userId,
+          thumbnail: fileUpload,
+          date: moment().tz("Asia/Seoul").format("YYYY-MM-DD"),
+        },
+        function (err, result2) {
+          db.collection("port3_count").updateOne(
+            { name: "공지등록" },
+            { $inc: { noticeCount: 1 } },
+            function (err, result3) {
+              res.redirect("/admin/notice");
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+//관리자 공지사항 삭제처리 get 요청
+app.get("/deletenotice/:no", function (req, res) {
+  //db안에 해당 매장 번호에 맞는 데이터만 삭제 처리
+  db.collection("port3_notice").deleteOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      //매장 목록페이지로 이동
+      res.redirect("/admin/notice");
+    }
+  );
+});
+
+//공지사항 수정화면 페이지 get 요청
+app.get("/noticeupt/:no", function (req, res) {
+  //db안에 해당 게시글번호에 맞는 데이터를 꺼내오고 ejs파일로 응답
+  db.collection("port3_notice").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("admin_noticeupt", {
+        noticeData: result,
+        userData: req.user,
+      });
+    }
+  );
+  //input, textarea에다가 작성내용 미리 보여줌
+});
+
+//공지사항 수정사항 db에 적용하는 구간
+app.post("/updatenotice", upload.single("filetest"), function (req, res) {
+  if (req.file) {
+    fileUpload = req.file.originalname;
+  } else {
+    fileUpload = req.body.fileOrigin;
+  }
+  db.collection("port3_notice").updateOne(
+    { num: Number(req.body.num) },
+    {
+      $set: {
+        name: req.body.name,
+        content: req.body.content,
+        thumbnail: fileUpload,
+      },
+    },
+    //공지사항 페이지로 이동
+    function (err, result) {
+      res.redirect("/admin/notice");
+    }
+  );
+});
+
+app.get("/notice", async (req, res) => {
+  //사용자가 게시판에 접속시 몇번 페이징 번호로 접속했는지 확인
+  let pageNum = req.query.page == null ? 1 : Number(req.query.page);
+  //한 페이지당 보여줄 데이터 갯수
+  let perPage = 5;
+  //블록당 보여줄 페이징 번호 갯수
+  let blockCount = 3;
+  //현재 페이지 블록 구하는 구간
+  let blockNum = Math.ceil(pageNum / blockCount);
+  //블록안에 있는 페이징의 시작번호 값
+  let blockStart = (blockNum - 1) * blockCount + 1;
+  //블록안에 있는 페이징의 끝번호 값
+  let blockEnd = blockStart + blockCount - 1;
+  //데이터베이스 콜렉션에 있는 전체 객체의 갯수값 가져오는 명령어
+  let totalData = await db.collection("port3_notice").countDocuments({});
+  //전체 데이터값을 통해서 전체 페이징 번호를 계산
+  let paging = Math.ceil(totalData / perPage);
+  //블록에서 마지막 번호가 페이징의 끝번호보다 크다면, 페이징의 끝번호를 강제로 부여
+  if (blockEnd > paging) {
+    blockEnd = paging;
+  }
+  //블록의 총 갯수 계산
+  let totalBlock = Math.ceil(paging / blockCount);
+  //데이터베이스에서 꺼내오는 데이터의 순번값을 결정
+  //데이터베이스 콜렉션에서 데이터를 perPage 갯수만큼 맞춰서 가져오기
+  let startFrom = (pageNum - 1) * perPage;
+  //sort({정렬할 프로퍼티명:1}) 오름차순 -1은 내림차순
+  //조건문을 이용해서 입력한 검색어가 있는 경우는 aggregate({}).sort().skip().limit()
+
+  db.collection("port3_notice")
+    .find({})
+    .sort({ number: -1 })
+    .skip(startFrom)
+    .limit(perPage)
+    .toArray((err, result) => {
+      res.render("notice", {
+        noticeData: result,
+        paging: paging,
+        pageNum: pageNum,
+        blockStart: blockStart,
+        blockEnd: blockEnd,
+        blockNum: blockNum,
+        totalBlock: totalBlock,
+      });
+    });
+
+  //공지사항으로 검색시 (사용자)
+  app.get("/search/noticename", async (req, res) => {
+    //query: <-- notice.ejs 파일에서 입력한 input text -> req.query.name
+    //path: <-- db notice 콜렉션에서 어떤 항목명으로 찾을건지 name
+    let noticeSearch = [
+      {
+        $search: {
+          index: "notice_search",
+          text: {
+            query: req.query.name,
+            path: "name",
+          },
+        },
+      },
+    ];
+    //검색어 입력시
+    if (req.query.name !== "") {
+      db.collection("port3_notice")
+        .aggregate({ noticeSearch })
+        .sort({ number: -1 })
+        .skip(startFrom)
+        .limit(perPage)
+        .toArray((err, result) => {
+          res.render("notice", {
+            noticeData: result,
+            paging: paging,
+            pageNum: pageNum,
+            blockStart: blockStart,
+            blockEnd: blockEnd,
+            blockNum: blockNum,
+            totalBlock: totalBlock,
+          });
+        });
+    }
+    //검색어 미입력시
+    else {
+      db.collection("port3_notice")
+        .aggregate({ noticeSearch })
+        .sort({ number: -1 })
+        .skip(startFrom)
+        .limit(perPage)
+        .toArray((err, result) => {
+          res.render("notice", {
+            noticeData: result,
+            paging: paging,
+            pageNum: pageNum,
+            blockStart: blockStart,
+            blockEnd: blockEnd,
+            blockNum: blockNum,
+            totalBlock: totalBlock,
+          });
+        });
+    }
+  });
+});
+
+//공지사항 상세화면 get 요청  /:변수명  작명가능
+//db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
+app.get("/noticedetail/:no", function (req, res) {
+  db.collection("port3_notice").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("noticedetail", {
+        noticeData: result,
+        userData: req.user,
+      });
     }
   );
 });

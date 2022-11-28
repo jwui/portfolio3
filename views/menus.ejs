@@ -53,18 +53,81 @@
     <div id="menusbg">
       <h2>Menus</h2>
     </div>
-    <div id="menusscont">
+    <div id="menuscont">
       <% for(let i=0; i< menuData.length; i++) { %>
       <div class="card">
-        <a href="/menudetail/<%- menuData[i].num %>">
-          <img src="/upload/<%- menuData[i].thumbnail %>" />
+        <img src="/upload/<%- menuData[i].thumbnail %>" />
+        <a
+          href="/menudetail/<%- menuData[i].num %>"
+          data-number="<%- menuData[i].num %>"
+          ><p><%- menuData[i].name %></p>
         </a>
-        <p><%- menuData[i].name %></p>
         <p><%- menuData[i].price %></p>
       </div>
       <% } %>
     </div>
+    <div class="menuBg"></div>
+    <div id="detailcont">
+      <a class="modal_close">
+        <img src="/img/icon_close2.png" />
+      </a>
+      <img class="leftimg" src="" />
+      <div class="context">
+        <h2 class="title"></h2>
+        <p class="content"></p>
+        <h3 class="phrase">함께 먹으면 더 맛있는 메뉴</h3>
+        <div class="detailcard"></div>
+      </div>
+    </div>
 
     <%- include("common/footer.ejs") %>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      let closeBtn = document.querySelector("#detailcont .modal_close img");
+      closeBtn.addEventListener("click", function () {
+        menuBg.classList.toggle("on");
+        card.innerHTML = "";
+        detailCont.classList.toggle("on");
+      });
+    </script>
+    <script>
+      let clickBtn = document.querySelectorAll("#menuscont .card a");
+      let card = document.querySelector("#detailcont .context .detailcard");
+      let menuBg = document.querySelector(".menuBg");
+      let detailCont = document.querySelector("#detailcont");
+
+      clickBtn.forEach((item, index) => {
+        item.addEventListener("click", (e) => {
+          detailCont.classList.toggle("on");
+          e.preventDefault();
+          menuBg.classList.toggle("on");
+          axios
+            .get("/menudetail/" + item.getAttribute("data-number"))
+            .then(function (response) {
+              // handle success
+              document.querySelector("#detailcont .content").innerHTML =
+                response.data.menuData.content;
+              document
+                .querySelector("#detailcont .leftimg")
+                .setAttribute(
+                  "src",
+                  "/upload/" + response.data.menuData.thumbnail
+                );
+              console.log(response.data);
+              let recomData = response.data.recomData;
+              recomData.forEach((item, index) => {
+                console.log(index);
+                let img = `<img src="/upload/${response.data.recomData[index].thumbnail}">`;
+                card.innerHTML += img;
+              });
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            });
+        });
+      });
+    </script>
+    <script></script>
   </body>
 </html>
