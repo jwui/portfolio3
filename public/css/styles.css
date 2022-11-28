@@ -626,3 +626,33 @@ body {
   color: #ff6d0d;
   font-weight: 800;
 }
+
+#detailcont {
+  display: flex;
+  width: 95%;
+  max-width: 1000px;
+  padding: 50px;
+  box-sizing: border-box;
+}
+#detailcont img {
+  width: 40%;
+  margin-right: 100px;
+  border: 1px solid #a7a7a7;
+}
+#detailcont .context {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+#detailcont .context .content::after {
+  width: 100%;
+  content: "";
+  display: block;
+  background-color: #a7a7a7;
+  width: 100%;
+  height: 1px;
+  margin-top: 50px;
+}
+#detailcont .context .detailcard img {
+  width: 100px;
+}

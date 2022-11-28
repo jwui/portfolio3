@@ -46,18 +46,20 @@
     />
     <script src="/themes/1/js-image-slider.js" type="text/javascript"></script>
     <script src="https://unpkg.com/scrollreveal"></script>
-    <style></style>
   </head>
   <body>
-    <div class="detailcont">
+    <div id="detailcont">
       <img src="/upload/<%- menuData.thumbnail %>" />
-      <%- menuData.content %>"
-      <p>함께 먹으면 더 맛있는 메뉴</p>
-      <% for(let i = 0; i < recomData[0].recom.length; i++) { %>
-      <div class="detailcard">
-        <img src="/upload/<%- recomData[0].recom[i] %>.png" />
+      <div class="context">
+        <h2 class="title"><%- menuData.name %></h2>
+        <p class="content"><%- menuData.content %></p>
+        <h3 class="phrase">함께 먹으면 더 맛있는 메뉴</h3>
+        <% for(let i = 0; i < recomData[0].recom.length; i++) { %>
+        <div class="detailcard">
+          <img src="/upload/<%- recomData[0].recom[i] %>.png" />
+        </div>
+        <% } %>
       </div>
-      <% } %>
     </div>
   </body>
 </html>
