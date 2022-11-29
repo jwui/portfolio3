@@ -126,7 +126,7 @@ app.post("/memberjoin", function (req, res) {
     function (err, result) {
       if (result) {
         res.send(
-          "<script>alert('이미 가입된 이메일입니다'); location.href='/join'; </script>"
+          "<script>alert('이미 가입된 이메일입니다'); location.href='/userjoin'; </script>"
         );
       } else {
         db.collection("port3_count").findOne(
