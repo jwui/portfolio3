@@ -54,6 +54,10 @@
           <div>매장전화번호</div>
           <div><%- storeData[i].phone %></div>
         </div>
+        <div class="line">
+          <div>매장좌표</div>
+          <div><%- storeData[i].coord %></div>
+        </div>
         <a href="/deletestore/<%- storeData[i].num %>">삭제</a>
         <a href="/storeupt/<%- storeData[i].num %>">수정</a>
       </div>

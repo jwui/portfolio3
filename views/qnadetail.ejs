@@ -1,0 +1,271 @@
+<% if(!userData) { %>
+<script>
+  alert("비회원은 접근할 수 없는 페이지입니다");
+  location.href = "/login";
+</script>
+<% } %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>고객의소리 목록페이지</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.3.2/countUp.umd.min.js"
+      integrity="sha512-Be9XaN4NvN8CVmbk4juf7JX2/87a7I37CX1WV37w+jyav4exBHDqHzmjs+Tbx7Dt2j9vpULDZNxcP0sZP03/WQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
+      integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link
+      href="/themes/1/js-image-slider.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="/themes/1/js-image-slider.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .comment {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .comment #comment_form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+      }
+      .comment #comment_form button {
+        margin-top: 20px;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid #555;
+      }
+      .comment #comment_form textarea {
+        border: 1px solid #555;
+        width: 700px;
+      }
+
+      .comment textarea {
+        height: 300px;
+        resize: none;
+        margin: 0 auto;
+        box-sizing: border-box;
+        line-height: 1.5;
+        padding: 20px;
+      }
+      .comment_box {
+        margin: 30px 0;
+        border: 1px solid #555;
+      }
+      .comupdate_form {
+        display: none;
+      }
+      .comupdate_form textarea {
+        width: 100%;
+        margin: 0 auto;
+        height: 200px;
+        box-sizing: border-box;
+        line-height: 1.5;
+        padding: 20px;
+        margin: 0px;
+        text-align: left;
+        white-space: normal;
+      }
+      .comupdate_form .comment_ok {
+        margin-top: 20px;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid #555;
+        line-height: 20px;
+      }
+      .comupdate_form .comment_no {
+        margin-top: 20px;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid #555;
+        line-height: 20px;
+      }
+      #container {
+        width: 800px;
+        margin: 0 auto;
+        border: 1px solid #555;
+        padding: 30px;
+        box-sizing: border-box;
+        margin-top: 200px;
+        line-height: 1.5;
+      }
+      #container .comment_box {
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      #container .comment_box .comment_btn .update_comment {
+        margin-top: 20px;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid #555;
+        line-height: 60px;
+        margin-right: 10px;
+      }
+      #container .comment_box .comment_btn .del_comment {
+        margin-top: 20px;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid #555;
+        line-height: 60px;
+      }
+      #container .comment_box .comment_btn a {
+        color: #555;
+        font-weight: bold;
+      }
+      #container .brd_center div span {
+        font-weight: 700;
+      }
+      #container .brd_center > div {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("common/header.ejs") %>
+    <div id="container">
+      <div class="brd_center">
+        <div><span><%- qnaData.num %></span></div>
+        <div>
+          <span>제목:</span>
+          <%- qnaData.title %>
+        </div>
+        <div>
+          <span>내용: </span>
+          <%- qnaData.context %>
+        </div>
+        <div>
+          <span>작성자: </span>
+          <%- qnaData.author %>
+        </div>
+        <div>
+          <span>날짜: </span>
+          <%- qnaData.date %>
+        </div>
+      </div>
+      <!-- server.js에서 넘겨준 userData에 있는 id와
+                 데이터베이스에서 가지고온 qnaData에 있는 데이터가 일치하면 수정 삭제 버튼이 보인다.-->
+      <% if(userData.userId === qnaData.author) { %>
+      <a href="">수정</a>
+      <a href="/deleteqna/<%- qnaData.num %>">삭제</a>
+      <% } %>
+      <a href="/qnalist">목록</a>
+      <!--해당 게시글 페이지내에서 댓글입력하는 구간-->
+      <div class="comment">
+        <form id="comment_form" action="/addcomment" method="post">
+          <!--해당 댓글 입력시 해당 게시글의 번호값도 같이 전송
+                  댓글은 어떤 게시글안에 소속될 것인지 표시하기 위해서!
+              -->
+          <input type="hidden" name="comId" value="<%- qnaData.num %>" />
+          <textarea name="comment_text"></textarea>
+          <button type="submit">댓글등록</button>
+        </form>
+      </div>
+      <!--댓글 출력 구간-->
+      <% for(let i = 0; i < commentData.length; i++) { %>
+      <div class="comment_box">
+        <div class="comment_context"><%- commentData[i].comContext %></div>
+        <div class="comment_author"><%- commentData[i].comAuthor %></div>
+        <div class="comment_date"><%- commentData[i].comDate %></div>
+        <% if (userData.userId === commentData[i].comAuthor) { %>
+        <div class="comment_btn">
+          <a class="update_comment" href="#">댓글수정</a>
+          <a
+            class="del_comment"
+            href="/deletecomment/<%- commentData[i].comNo %>"
+            >댓글삭제</a
+          >
+        </div>
+        <form class="comupdate_form" action="/updatecomment" method="post">
+          <input
+            type="hidden"
+            name="comNo"
+            value="<%- commentData[i].comNo %>"
+          />
+          <textarea class="comContext" name="comContext">
+                <%- commentData[i].comContext %></textarea
+          >
+          <button class="comment_ok" type="submit">작성완료</button>
+          <button class="comment_no" type="button">작성취소</button>
+        </form>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+    <%- include("common/footer.ejs") %>
+    <script>
+      //댓글수정 버튼들 선택
+      const uptCom = document.querySelectorAll(".update_comment");
+      //댓글수정 버튼을 클릭시 나올 폼태그
+      const comuptForm = document.querySelectorAll(".comupdate_form");
+      //작성취소 버튼들 선택
+      const comCancel = document.querySelectorAll(".comment_no");
+      //댓글 수정 textarea들 선택
+      let comContext = document.querySelectorAll(".comContext");
+
+      //작성취소를 눌렀을 때 원래 댓글의 내용으로 리셋시키기 위한 변수
+      let originText = [];
+      //반복문 사용해서 댓글수정 a태그에 클릭기능 이벤트 달아줌
+      for (let i = 0; i < uptCom.length; i++) {
+        uptCom[i].addEventListener("click", function (e) {
+          e.preventDefault(); //페이지 이동 금지
+          uptCom[i].style.display = "none";
+          //클릭한 해당 댓글수정 a태그만 화면에 안보이게 처리
+          comuptForm[i].style.display = "block";
+          //해당 수정 폼태그만 화면에 나오게 처리
+          originText[i] = comContext[i].value;
+          //해당 댓글수정 textarea태그의 텍스트를 변수에 대입
+        });
+        //작성취소 버튼들에 이벤트
+        comCancel[i].addEventListener("click", function () {
+          comuptForm[i].style.display = "none";
+          uptCom[i].style.display = "inline";
+          //만약 버튼디자인을 block flex 쓰셨다면 똑같이 맞출것
+          comContext[i].value = originText[i];
+          //textarea태그의 텍스트 내용을 변수안에 있는 텍스트로 교체
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -9,7 +9,7 @@
         <li><a href="/store">매장찾기</a></li>
         <li><a href="/events">이벤트</a></li>
         <li><a href="/notice">공지사항</a></li>
-        <li><a href="#">고객의소리</a></li>
+        <li><a href="/qnalist">고객의소리</a></li>
       </ul>
     </div>
   </div>
@@ -20,7 +20,12 @@
       <a href="#"><i class="fa-brands fa-youtube"></i></a>
     </div>
     <div class="btns">
+      <% if(!userData) { %>
       <a href="/login">로그인</a>
+      <% } else { %>
+      <a class="logout" href="/logout">로그아웃</a>
+      <a class="logout" href="/mypage">마이페이지</a>
+      <% } %>
     </div>
   </div>
 </div>

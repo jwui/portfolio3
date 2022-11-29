@@ -1,10 +1,17 @@
+<% if(!userData) { %>
+<script>
+  alert("비회원은 접근할 수 없는 페이지입니다");
+  location.href = "/login";
+</script>
+<% } %>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>이벤트 상세페이지</title>
+    <title>고객의소리 목록페이지</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <link
       rel="stylesheet"
@@ -50,29 +57,33 @@
   <body>
     <%- include("common/header.ejs") %>
     <div id="eventsbg">
-      <h2>Notice</h2>
+      <h2>고객의 소리</h2>
     </div>
-    <div id="eventsdetail">
-      <div class="title"><h1><%- noticeData.name %></h1></div>
-      <div class="info">
-        <p>작성자: <%- noticeData.user %></p>
-        <p>작성일: <%- noticeData.date %></p>
-        <p>조회수: <%- noticeData.views %></p>
+    <div id="qnalistcont">
+      <div class="brd_center">
+        <table>
+          <tr>
+            <th class="num">번호</th>
+            <th class="title">제목</th>
+            <th class="author">작성자</th>
+            <th class="date">작성시간</th>
+          </tr>
+          <% for(let i=0; i < qnaData.length; i++){ %>
+          <tr>
+            <td><%- qnaData[i].num %></td>
+            <td>
+              <a href="/qnadetail/<%- qnaData[i].num %>"
+                ><%- qnaData[i].title %></a
+              >
+            </td>
+            <td><%- qnaData[i].author %></td>
+            <td><%- qnaData[i].date %></td>
+          </tr>
+          <% } %>
+        </table>
+        <a href="/qnainsert">게시글작성</a>
       </div>
-      <div class="share">
-        <h2>Share This Post</h2>
-        <div class="iconscont">
-          <a href="#"><i class="fa-brands fa-facebook"></i></a>
-          <a href="#"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#"><i class="fa-brands fa-twitter"></i></a>
-          <a href="#"><i class="fa-solid fa-envelope"></i></a>
-        </div>
-      </div>
-      <div class="detailcont">
-        <img src="/upload/<%- noticeData.thumbnail %>" />
-        <p><%- noticeData.content %></p>
-      </div>
+      <%- include("common/footer.ejs") %>
     </div>
-    <%- include("common/footer.ejs") %>
   </body>
 </html>

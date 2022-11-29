@@ -1,0 +1,61 @@
+<% if(!userData) { %>
+<script>
+  alert("비회원은 접근할 수 없는 페이지입니다");
+  location.href = "/login";
+</script>
+<% } %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      #mypage_container {
+        padding-top: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("common/header.ejs") %>
+    <div id="mypage_container">
+      <div class="center">
+        <h2>회원정보 수정</h2>
+        <form action="/myupdate" method="post">
+          <!--아이디 표시-->
+          <div></div>
+          <!--원래 비밀번호 입력할 input 태그 있어야함-->
+          <input
+            type="password"
+            name="passorigin"
+            placeholder="원래 비밀번호 입력"
+          />
+          <input
+            type="password"
+            name="userPass"
+            placeholder="변경할 비밀번호 입력"
+            required
+          />
+          <button type="submit">회원정보 수정</button>
+          <a class="cancelBtn">뒤로가기</a>
+          <!--취소버튼 누르면 메인페이지로 이동-->
+        </form>
+      </div>
+      <script>
+        //비번/닉네임/전화번호/이메일 정규식 표현(무조건 뭔가를 입력하게끔) -> 연습
+
+        //취소버튼 누르면
+        // alert("메인페이지로 이동합니다");
+        // location.href = "/";
+        let cancel = document.querySelector(".cancelBtn");
+        cancel.addEventListener("click", () => {
+          alert("메인페이지로 이동합니다.");
+          location.href = "/";
+        });
+      </script>
+    </div>
+  </body>
+</html>

@@ -46,7 +46,6 @@
     />
     <script src="/themes/1/js-image-slider.js" type="text/javascript"></script>
     <script src="https://unpkg.com/scrollreveal"></script>
-    <style></style>
   </head>
   <body>
     <%- include("common/header.ejs") %>
@@ -110,10 +109,14 @@
         <li><a href="?page=1">처음</a></li>
         <% } %> <% if(blockStart > totalBlock) { %>
         <li><a href="?page=<%- blockStart - 1 %>">이전</a></li>
-        <% } %> <% for(let i = blockStart; i <= blockEnd; i++) { %> <% if
-        (pageNum == i) { %>
+        <% } %> <% for(let i = blockStart; i <= blockEnd; i++) { %> <% if(name){
+        %>
+        <li class="highlight">
+          <a href="?page=1&name=<%- name %>"><%- i %></a>
+        </li>
+        <% } else if(pageNum == i) { %>
         <li class="highlight"><a href="?page=<%- i %>"><%- i %></a></li>
-        <% } else { %>
+        <% } else if(pageNum != i) { %>
         <li><a href="?page=<%- i %>"><%- i %></a></li>
         <% } %> <% } %> <% if(blockNum < totalBlock) { %>
         <li><a href="?page=<%- blockEnd + 1 %>">다음</a></li>
@@ -126,9 +129,9 @@
       <div class="searchform">
         <form class="searchform1" action="/search/noticename" method="get">
           <div>
-            <div>제목으로 검색</div>
-            <input type="text" name="name" />
+            <input type="text" name="name" placeholder="검색어 입력" />
             <button type="submit">검색</button>
+            <a href="/notice">목록</a>
           </div>
         </form>
       </div>

@@ -417,6 +417,7 @@ body {
   }
   .paging li {
     margin: 0 15px;
+    font-size: 14px;
   }
   .paging li a {
     border: 2px solid #7f7f7f;
@@ -427,7 +428,7 @@ body {
     transition-duration: 0.3s;
     width: 40px;
     height: 40px;
-    font-size: 16px;
+    font-size: 14px;
   }
   .paging li.highlight a {
     color: #ff6d0d;
@@ -796,6 +797,7 @@ body {
   }
   .paging li {
     margin: 0 15px;
+    font-size: 14px;
   }
   .paging li a {
     border: 2px solid #7f7f7f;
@@ -806,10 +808,38 @@ body {
     transition-duration: 0.3s;
     width: 40px;
     height: 40px;
+    font-size: 14px;
   }
   .paging li.highlight a {
     color: #ff6d0d;
     border: 2px solid #ff6d0d;
+  }
+  .searchform {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    .searchform1 {
+      input {
+        line-height: 40px;
+        text-indent: 10px;
+        border: 1px solid #555;
+      }
+      button {
+        line-height: 40px;
+        border: 1px solid #555;
+        padding: 0 10px;
+        background-color: transparent;
+        font-family: "Nanum Gothic", sans-serif;
+      }
+      a {
+        display: block;
+        color: #555;
+        margin-top: 30px;
+        text-align: center;
+      }
+    }
   }
 }
 
@@ -824,4 +854,55 @@ body {
 }
 .menuBg.on {
   left: 0;
+}
+
+//고객의소리 리스트 구간
+
+#qnalistcont {
+  padding-top: 100px;
+  .brd_center {
+    width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 40px;
+
+    th {
+      border-right: 1px solid #f2f2f2;
+      border-top: 1px solid #f2f2f2;
+      border-left: 1px solid #f2f2f2;
+      border-bottom: 2px solid #f2f2f2;
+      text-indent: 10px;
+      border-collapse: collapse;
+    }
+    td {
+      text-indent: 10px;
+      border: 1px solid #f2f2f2;
+      a {
+        color: #555;
+      }
+    }
+    .num {
+      width: 50px;
+    }
+    .author {
+      width: 150px;
+    }
+    .title {
+      width: 400px;
+    }
+    .date {
+      width: 200px;
+    }
+    > a {
+      color: #555;
+      border: 1px solid #555;
+      line-height: 120px;
+      padding: 10px;
+      transition: all 0.3s;
+      &:hover {
+        color: #ff6d0d;
+        border: 1px solid #ff6d0d;
+      }
+    }
+  }
 }

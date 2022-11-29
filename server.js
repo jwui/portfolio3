@@ -43,6 +43,30 @@ app.get("/login", (req, res) => {
   res.render("login"); // login.ejs 파일로 응답
 });
 
+//로그인 페이지에서 입력한 아이디 비밀번호 검증 처리 요청
+app.post(
+  "/loginresult",
+  passport.authenticate("local", {
+    failureRedirect: "/fail",
+  }),
+  //실패시 /fail 경로로 요청
+  function (req, res) {
+    if (req.user.userId == "admin") {
+      res.redirect("/admin/store");
+      //관리자 아이디로 로그인 성공시 관리자 매장등록 페이지로 이동
+    } else {
+      //그렇지 않은 경우 메인페이지로 이동
+      res.render("index", { userData: req.user });
+    }
+  }
+);
+
+app.get("/fail", function (req, res) {
+  res.send(
+    "<script>  alert('아이디나 비밀번호가 잘못되었습니다. 다시 입력해주세요.'); location.href = '/login';</script>"
+  );
+});
+
 //  /loginresult 경로 요청시 passport.autenticate() 함수구간이 아이디 비번 로그인 검증구간
 passport.use(
   new LocalStrategy(
@@ -80,29 +104,11 @@ passport.serializeUser(function (user, done) {
 
 // 로그인을 한 후 다른 페이지들을 접근할 시 생성된 세션에 있는 회원정보 데이터를 보내주는 처리
 // 그전에 데이터베이스 있는 아이디와 세션에 있는 회원정보중에 아이디랑 매칭되는지 찾아주는 작업
-passport.deserializeUser(function (userId, done) {
-  db.collection("port3_user").findOne(
-    { userId: userId },
-    function (err, result) {
-      done(null, result);
-    }
-  );
+passport.deserializeUser(function (id, done) {
+  db.collection("port3_user").findOne({ userId: id }, function (err, result) {
+    done(null, result);
+  });
 });
-
-//관리자 화면 로그인 유무 확인
-app.post(
-  "/login",
-  passport.authenticate("local", { failureRedirect: "/fail" }),
-  (req, res) => {
-    if (req.user.userId == "admin") {
-      res.redirect("/admin/store");
-      console.log(req.user);
-      //로그인 성공시 관리자 매장등록 페이지로 이동
-    } else {
-      res.redirect("/");
-    }
-  }
-);
 
 //로그인 실패시 fail경로
 app.get("/fail", (req, res) => {
@@ -128,7 +134,7 @@ app.post("/memberjoin", function (req, res) {
           function (err, result) {
             db.collection("port3_user").insertOne(
               {
-                userid: req.body.username,
+                userId: req.body.username,
                 userPass: req.body.userpass,
               },
               function (err, result) {
@@ -164,6 +170,15 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+
+//로그아웃 경로 get 요청
+app.get("/logout", function (req, res) {
+  req.session.destroy(function (err) {
+    // 요청 -> 세션제거
+    res.clearCookie("connect.sid"); // 응답 -> 본인접속 웹브라우저 쿠키 제거
+    res.redirect("/"); // 메인페이지 이동
+  });
+});
 
 //관리자 매장등록 화면 페이지
 app.get("/admin/store", (req, res) => {
@@ -291,6 +306,7 @@ app.get("/store", async (req, res) => {
     .limit(perPage)
     .toArray((err, result) => {
       res.render("store", {
+        userData: req.user,
         storeData: result,
         paging: paging,
         pageNum: pageNum,
@@ -684,6 +700,8 @@ app.get("/notice", async (req, res) => {
         blockEnd: blockEnd,
         blockNum: blockNum,
         totalBlock: totalBlock,
+        userData: req.user,
+        name: null,
       });
     });
 
@@ -704,14 +722,12 @@ app.get("/notice", async (req, res) => {
     ];
 
     let pageNum = req.query.page == null ? 1 : Number(req.query.page);
-    let perPage = 5;
-    let blockCount = 3;
+    let perPage = 10;
+    let blockCount = 1;
     let blockNum = Math.ceil(pageNum / blockCount);
     let blockStart = (blockNum - 1) * blockCount + 1;
     let blockEnd = blockStart + blockCount - 1;
-    let totalData = await db
-      .collection("port3_notice")
-      .aggregate({ noticeSearch }, { $count: "test" });
+    let totalData = await db.collection("port3_notice").countDocuments({});
     let paging = Math.ceil(totalData / perPage);
     if (blockEnd > paging) {
       blockEnd = paging;
@@ -719,45 +735,27 @@ app.get("/notice", async (req, res) => {
     let totalBlock = Math.ceil(paging / blockCount);
     let startFrom = (pageNum - 1) * perPage;
     //검색어 입력시
-    console.log(totalData);
-    res.send("테스트");
     if (req.query.name !== "") {
-      // db.collection("port3_notice")
-      //   .aggregate({ noticeSearch })
-      //   .sort({ _id: -1 })
-      //   .skip(startFrom)
-      //   .limit(perPage)
-      //   .toArray((err, result) => {
-      //     res.render("notice", {
-      //       noticeData: result,
-      //       paging: paging,
-      //       pageNum: pageNum,
-      //       blockStart: blockStart,
-      //       blockEnd: blockEnd,
-      //       blockNum: blockNum,
-      //       totalBlock: totalBlock,
-      //     });
-      //   });
+      db.collection("port3_notice")
+        .aggregate(noticeSearch)
+        .sort({ _id: -1 })
+        .toArray((err, result) => {
+          res.render("notice", {
+            noticeData: result,
+            paging: paging,
+            pageNum: pageNum,
+            blockStart: blockStart,
+            blockEnd: blockEnd,
+            blockNum: blockNum,
+            totalBlock: totalBlock,
+            userData: req.user,
+            name: req.query.name,
+          });
+        });
     }
     //검색어 미입력시
     else {
       res.redirect("/notice");
-      // db.collection("port3_notice")
-      //   .find({})
-      //   .sort({ _id: -1 })
-      //   .skip(startFrom)
-      //   .limit(perPage)
-      //   .toArray((err, result) => {
-      //     res.render("notice", {
-      //       noticeData: result,
-      //       paging: paging,
-      //       pageNum: pageNum,
-      //       blockStart: blockStart,
-      //       blockEnd: blockEnd,
-      //       blockNum: blockNum,
-      //       totalBlock: totalBlock,
-      //     });
-      //   });
     }
   });
 });
@@ -772,9 +770,207 @@ app.get("/noticedetail/:no", function (req, res) {
       db.collection("port3_notice").findOne(
         { num: Number(req.params.no) },
         function (err, result) {
-          res.render("noticedetail", { noticeData: result });
+          res.render("noticedetail", {
+            noticeData: result,
+            userData: req.user,
+          });
         }
       );
+    }
+  );
+});
+
+//고객의소리 목록 get 요청
+app.get("/qnalist", function (req, res) {
+  db.collection("port3_qna")
+    .find()
+    .toArray(function (err, result) {
+      res.render("qnalist", { qnaData: result, userData: req.user });
+    });
+  //db안에 게시글 콜렉션 찾아서 데이터 전부 꺼내오고 ejs파일로 응답
+});
+
+//고객의소리 게시글 작성 페이지 get 요청
+app.get("/qnainsert", function (req, res) {
+  //게시글 작성페이지 ejs 파일 응답
+  res.render("qnainsert", { userData: req.user });
+});
+
+//고객의소리 게시글 작성 후 데이터베이스에 넣는 작업 요청
+app.post("/qnaadd", function (req, res) {
+  //moment 사용해서 현재시간 추가
+  db.collection("port3_count").findOne(
+    { name: "문의등록" },
+    function (err, result) {
+      db.collection("port3_qna").insertOne(
+        {
+          num: result.qnaCount + 1,
+          title: req.body.title,
+          context: req.body.context,
+          author: req.user.userId,
+          date: moment().tz("Asia/Seoul").format("YYYY-MM-DD HH:mm:ss"),
+        },
+        function (err, result) {
+          db.collection("port3_count").updateOne(
+            { name: "문의등록" },
+            { $inc: { qnaCount: 1 } },
+            function (err, result) {
+              res.redirect("/qnalist"); //게시글 작성 후 게시글 목록경로 요청
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+//고객의소리 게시글 상세화면 get 요청  /:변수명  작명가능
+//db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
+app.get("/qnadetail/:no", function (req, res) {
+  db.collection("port3_qna").findOne(
+    { num: Number(req.params.no) },
+    function (err, result1) {
+      //게시글 갖고오고 -> 해당 게시글 번호에 맞는 댓글만 갖고오자
+      db.collection("port3_comment")
+        .find({ comPrd: result1.num })
+        .toArray(function (err, result2) {
+          //사용자에게 응답 -> 게시글에 관련된 데이터 / 로그인하고 있는 유저정보 / 댓글에 관련된 데이터
+          res.render("qnadetail", {
+            userData: req.user,
+            qnaData: result1,
+            commentData: result2,
+          });
+        });
+    }
+  );
+});
+
+//고객의소리 댓글 작성후 db에 추가하는 요청
+app.post("/addcomment", function (req, res) {
+  //몇번 댓글인지 번호부여하기 위한
+  db.collection("port3_count").findOne(
+    { name: "댓글등록" },
+    function (err, result1) {
+      //해당 게시글의 번호값도 함께 부여! port3_qna
+      db.collection("port3_qna").findOne(
+        { num: Number(req.body.comId) },
+        function (err, result2) {
+          //port3_comment 콜렉션에 댓글을 집어넣자!
+          db.collection("port3_comment").insertOne(
+            {
+              comNo: result1.commentCount + 1,
+              comPrd: result2.num,
+              comContext: req.body.comment_text,
+              comAuthor: req.user.userId,
+              comDate: moment().tz("Asia/Seoul").format("YYYY-MM-DD HH:mm:ss"),
+            },
+            function (err, result) {
+              db.collection("port3_count").updateOne(
+                { name: "댓글등록" },
+                { $inc: { commentCount: 1 } },
+                function (err, result) {
+                  res.redirect("/qnadetail/" + req.body.comId);
+                  //상세페이지에서 댓글입력시 보내준 게시글 번호로 -> 상세페이지 이동하도록 요청
+                }
+              );
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+//고객의소리 게시글 삭제처리 get 요청
+app.get("/deleteqna/:no", function (req, res) {
+  //db안에 해당 매장 번호에 맞는 데이터만 삭제 처리
+  db.collection("port3_qna").deleteOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      //매장 목록페이지로 이동
+      res.redirect("/qnalist");
+    }
+  );
+});
+
+//고객의소리 댓글 삭제처리 get 요청
+app.get("/deletecomment/:no", function (req, res) {
+  //해당댓글의 게시글(부모)번호값을 찾아온 후 댓글을
+  //삭제하고 난 다음에는 해당 상세페이지로 다시 이동(게시글번호값)!
+  db.collection("port3_comment").findOne(
+    { comNo: Number(req.params.no) },
+    function (err, result1) {
+      db.collection("port3_comment").deleteOne(
+        { comNo: Number(req.params.no) },
+        function (err, result2) {
+          //댓글 삭제후 findOne으로 찾아온 comPrd <--- 게시글(부모)의 번호로 경로 요청
+          res.redirect("/qnadetail/" + result1.comPrd);
+        }
+      );
+    }
+  );
+});
+
+//고객의소리 댓글 수정처리 post요청
+app.post("/updatecomment", function (req, res) {
+  db.collection("port3_comment").findOne(
+    { comNo: Number(req.body.comNo) },
+    function (err, result1) {
+      db.collection("port3_comment").updateOne(
+        { comNo: Number(req.body.comNo) },
+        { $set: { comContext: req.body.comContext } },
+        function (err, result) {
+          res.redirect("/qnadetail/" + result1.comPrd);
+        }
+      );
+    }
+  );
+});
+
+//마이페이지(회원정보수정) 페이지 요청 경로
+app.get("/mypage", function (req, res) {
+  res.render("mypage", { userData: req.user });
+});
+
+//마이페이지에서 수정한 데이터를 db에 수정반영처리
+app.post("/myupdate", function (req, res) {
+  //회원정보 콜렉션에 접근해서 해당 아이디에 맞는
+  //비번/닉네임/이메일주소/전화번호 수정한걸 변경처리 updateOne
+
+  //원래는 mypage.ejs파일에서 원래 비밀번호 입력창과 / 변경할 비밀번호 입력창
+  //조건문으로 db에 있는 비밀번호와 mypage에서 입력한 원래비밀번호가 일치하면
+
+  //db에 있는 로그인한 유저의 비밀번호값은 findOne으로 찾아와서
+  //if(mypage에서 입력한 비번과 db에 있는 비밀번호가 똑같다면)
+  db.collection("port3_user").findOne(
+    { userId: req.user.userId },
+    function (err, result1) {
+      {
+        db.collection("port3_user").findOne(
+          { userPass: req.user.userPass },
+          function (err, result2) {
+            if (req.body.passorigin == result2.userPass) {
+              db.collection("port3_user").updateOne(
+                { userId: req.user.userId },
+                {
+                  $set: {
+                    userPass: req.body.userPass,
+                  },
+                },
+                function (err, result3) {
+                  res.send(
+                    "<script>alert('회원정보 수정완료'); location.href='/';</script>"
+                  );
+                }
+              );
+            } else {
+              res.send(
+                "<script>alert('현재 비밀번호를 잘못 입력하셨습니다'); location.href='/mypage';</script>"
+              );
+            }
+          }
+        );
+      }
     }
   );
 });
