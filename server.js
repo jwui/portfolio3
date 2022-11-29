@@ -109,6 +109,46 @@ app.get("/fail", (req, res) => {
   res.send("로그인 실패");
 });
 
+app.get("/userjoin", (req, res) => {
+  res.render("userjoin");
+});
+
+//회원가입 페이지에서 입력한 내용들을 데이터베이스에 저장
+app.post("/memberjoin", function (req, res) {
+  db.collection("port3_user").findOne(
+    { userId: req.body.username },
+    function (err, result) {
+      if (result) {
+        res.send(
+          "<script>alert('이미 가입된 이메일입니다'); location.href='/join'; </script>"
+        );
+      } else {
+        db.collection("port3_count").findOne(
+          { name: "회원정보" },
+          function (err, result) {
+            db.collection("port3_user").insertOne(
+              {
+                userid: req.body.username,
+                userPass: req.body.userpass,
+              },
+              function (err, result) {
+                db.collection("port3_count").updateOne(
+                  { name: "회원정보" },
+                  { $inc: { joinCount: 1 } },
+                  function (err, result) {
+                    res.redirect("/login");
+                    //res.render("login"); ejs파일 응답하는걸로 처리가능
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+});
+
 //파일첨부
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -150,6 +190,7 @@ app.post("/addstore", (req, res) => {
         delivery: req.body.delivery,
         hours: req.body.hours,
         phone: req.body.phone,
+        coord: req.body.coord,
       },
       (err, result) => {
         db.collection("port3_count").updateOne(
@@ -192,6 +233,7 @@ app.post("/updatestore", function (req, res) {
         delivery: req.body.delivery,
         hours: req.body.hours,
         phone: req.body.phone,
+        coord: req.body.coord,
       },
     },
     //해당 게시글 상세화면 페이지로 이동
@@ -630,7 +672,7 @@ app.get("/notice", async (req, res) => {
 
   db.collection("port3_notice")
     .find({})
-    .sort({ number: -1 })
+    .sort({ _id: -1 })
     .skip(startFrom)
     .limit(perPage)
     .toArray((err, result) => {
@@ -660,43 +702,62 @@ app.get("/notice", async (req, res) => {
         },
       },
     ];
+
+    let pageNum = req.query.page == null ? 1 : Number(req.query.page);
+    let perPage = 5;
+    let blockCount = 3;
+    let blockNum = Math.ceil(pageNum / blockCount);
+    let blockStart = (blockNum - 1) * blockCount + 1;
+    let blockEnd = blockStart + blockCount - 1;
+    let totalData = await db
+      .collection("port3_notice")
+      .aggregate({ noticeSearch }, { $count: "test" });
+    let paging = Math.ceil(totalData / perPage);
+    if (blockEnd > paging) {
+      blockEnd = paging;
+    }
+    let totalBlock = Math.ceil(paging / blockCount);
+    let startFrom = (pageNum - 1) * perPage;
     //검색어 입력시
+    console.log(totalData);
+    res.send("테스트");
     if (req.query.name !== "") {
-      db.collection("port3_notice")
-        .aggregate({ noticeSearch })
-        .sort({ number: -1 })
-        .skip(startFrom)
-        .limit(perPage)
-        .toArray((err, result) => {
-          res.render("notice", {
-            noticeData: result,
-            paging: paging,
-            pageNum: pageNum,
-            blockStart: blockStart,
-            blockEnd: blockEnd,
-            blockNum: blockNum,
-            totalBlock: totalBlock,
-          });
-        });
+      // db.collection("port3_notice")
+      //   .aggregate({ noticeSearch })
+      //   .sort({ _id: -1 })
+      //   .skip(startFrom)
+      //   .limit(perPage)
+      //   .toArray((err, result) => {
+      //     res.render("notice", {
+      //       noticeData: result,
+      //       paging: paging,
+      //       pageNum: pageNum,
+      //       blockStart: blockStart,
+      //       blockEnd: blockEnd,
+      //       blockNum: blockNum,
+      //       totalBlock: totalBlock,
+      //     });
+      //   });
     }
     //검색어 미입력시
     else {
-      db.collection("port3_notice")
-        .aggregate({ noticeSearch })
-        .sort({ number: -1 })
-        .skip(startFrom)
-        .limit(perPage)
-        .toArray((err, result) => {
-          res.render("notice", {
-            noticeData: result,
-            paging: paging,
-            pageNum: pageNum,
-            blockStart: blockStart,
-            blockEnd: blockEnd,
-            blockNum: blockNum,
-            totalBlock: totalBlock,
-          });
-        });
+      res.redirect("/notice");
+      // db.collection("port3_notice")
+      //   .find({})
+      //   .sort({ _id: -1 })
+      //   .skip(startFrom)
+      //   .limit(perPage)
+      //   .toArray((err, result) => {
+      //     res.render("notice", {
+      //       noticeData: result,
+      //       paging: paging,
+      //       pageNum: pageNum,
+      //       blockStart: blockStart,
+      //       blockEnd: blockEnd,
+      //       blockNum: blockNum,
+      //       totalBlock: totalBlock,
+      //     });
+      //   });
     }
   });
 });
@@ -704,13 +765,16 @@ app.get("/notice", async (req, res) => {
 //공지사항 상세화면 get 요청  /:변수명  작명가능
 //db안에 해당 게시글번호에 맞는 데이터만 꺼내오고 ejs파일로 응답
 app.get("/noticedetail/:no", function (req, res) {
-  db.collection("port3_notice").findOne(
+  db.collection("port3_notice").updateOne(
     { num: Number(req.params.no) },
-    function (err, result) {
-      res.render("noticedetail", {
-        noticeData: result,
-        userData: req.user,
-      });
+    { $inc: { views: 1 } },
+    function (err, result1) {
+      db.collection("port3_notice").findOne(
+        { num: Number(req.params.no) },
+        function (err, result) {
+          res.render("noticedetail", { noticeData: result });
+        }
+      );
     }
   );
 });

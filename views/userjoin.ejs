@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입페이지</title>
+  </head>
+  <body>
+    <form id="joinForm" action="/memberjoin" method="POST">
+      <input type="text" name="username" />
+      <input type="text" name="userpass" />
+
+      <button id="joinBtn" type="submit">회원가입</button>
+      <button id="cancelBtn" type="button">취소</button>
+    </form>
+    <script>
+      //취소버튼 클릭시 메인페이지로 이동
+      const cancelBtn = document.querySelector("#cancelBtn");
+      cancelBtn.addEventListener("click", function () {
+        location.href = "/"; //메인경로로 요청
+      });
+    </script>
+  </body>
+</html>
