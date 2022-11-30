@@ -1,3 +1,10 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
+  integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
 <div id="header">
   <div class="left">
     <h1 class="logo">
@@ -28,6 +35,28 @@
       <% } %>
     </div>
   </div>
+  <button class="hamburger hamburger--collapse" type="button">
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+  </button>
+  <div id="mobilemenu">
+    <ul class="menulist">
+      <li><a href="/menus">메뉴</a></li>
+      <li><a href="/store">매장찾기</a></li>
+      <li><a href="/events">이벤트</a></li>
+      <li><a href="/notice">공지사항</a></li>
+      <li><a href="/qnalist">고객의소리</a></li>
+      <div class="btns">
+        <% if(!userData) { %>
+        <a href="/login">로그인</a>
+        <% } else { %>
+        <a class="logout" href="/logout">로그아웃</a>
+        <% } %>
+        <a class="logout" href="/mypage">마이페이지</a>
+      </div>
+    </ul>
+  </div>
 </div>
 <script>
   let header = document.querySelector("#header");
@@ -37,5 +66,12 @@
     } else {
       header.style.height = "100px";
     }
+  });
+
+  let hamburger = document.querySelector(".hamburger");
+  let mobileMenu = document.querySelector("#mobilemenu");
+  hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("is-active");
+    mobileMenu.classList.toggle("on");
   });
 </script>

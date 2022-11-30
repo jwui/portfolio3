@@ -120,6 +120,12 @@ body {
   color: #f05026;
   border-color: #f05026;
 }
+#header .hamburger {
+  display: none;
+}
+#header #mobilemenu {
+  display: none;
+}
 
 #footer {
   padding: 80px 40px;
@@ -173,7 +179,6 @@ body {
   display: flex;
 }
 #indexwrapper #cont1 .cardscont .cards {
-  background-color: pink;
   width: 31.333333%;
   margin: 1%;
   height: 600px;
@@ -946,6 +951,70 @@ body {
   }
 }
 @media screen and (max-width: 1000px) {
+  #header .left .gnb {
+    display: none;
+  }
+  #header .right {
+    display: none;
+  }
+  #header .hamburger {
+    display: block;
+    z-index: 150;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  #header #mobilemenu {
+    display: block;
+    position: fixed;
+    top: 0px;
+    right: -60%;
+    width: 60%;
+    height: 100vh;
+    opacity: 1;
+    z-index: 100;
+    transition: all 0.3s;
+    background-color: #fff;
+  }
+  #header #mobilemenu .menulist {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+  }
+  #header #mobilemenu .menulist li {
+    margin-left: 15%;
+    font-size: 32px;
+    line-height: 2;
+  }
+  #header #mobilemenu .menulist li a {
+    color: #555;
+  }
+  #header #mobilemenu .menulist li:last-of-type {
+    margin-bottom: 80px;
+  }
+  #header #mobilemenu .menulist li a:hover {
+    color: #000;
+  }
+  #header #mobilemenu .menulist .btns {
+    margin-left: 15%;
+  }
+  #header #mobilemenu .menulist .btns a {
+    margin-right: 10px;
+    color: #555;
+    border: 1px solid #555;
+    padding: 10px;
+    border-radius: 100px;
+  }
+  #header #mobilemenu .menulist .btns a:last-of-type {
+    margin-right: 0px;
+  }
+  #header #mobilemenu .menulist .btns a:hover {
+    color: #000;
+  }
+  #header #mobilemenu.on {
+    right: 0%;
+  }
   #qnalistcont .brd_center table tbody tr {
     text-align: left;
   }
@@ -1113,6 +1182,9 @@ body {
   }
 }
 @media screen and (max-width: 768px) {
+  #indexwrapper #sliderFrame .image img {
+    width: 400px;
+  }
   #noticecont .list-wrap .list .line:nth-of-type(1) {
     width: 10%;
   }

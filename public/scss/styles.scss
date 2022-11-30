@@ -119,6 +119,15 @@ body {
       }
     }
   }
+
+  //햄버거메뉴 구간
+  .hamburger {
+    display: none;
+  }
+
+  #mobilemenu {
+    display: none;
+  }
 }
 
 //푸터 구간
@@ -182,7 +191,6 @@ body {
       margin: 0 auto;
       display: flex;
       .cards {
-        background-color: pink;
         width: 31.333333%;
         margin: 1%;
         height: 600px;
@@ -966,6 +974,7 @@ body {
     }
   }
 }
+
 @media screen and (max-width: 1200px) {
   #noticecont {
     .list-wrap {
@@ -991,8 +1000,80 @@ body {
     }
   }
 }
-
 @media screen and (max-width: 1000px) {
+  #header {
+    .left {
+      .gnb {
+        display: none;
+      }
+    }
+    .right {
+      display: none;
+    }
+    .hamburger {
+      display: block;
+      z-index: 150;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      .hamburger-box {
+        .hamburger-inner {
+        }
+      }
+    }
+    #mobilemenu {
+      display: block;
+      position: fixed;
+      top: 0px;
+      right: -60%;
+      width: 60%;
+      height: 100vh;
+      opacity: 1;
+      z-index: 100;
+      transition: all 0.3s;
+      background-color: #fff;
+      .menulist {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        li {
+          margin-left: 15%;
+          font-size: 32px;
+          line-height: 2;
+          a {
+            color: #555;
+          }
+          &:last-of-type {
+            margin-bottom: 80px;
+          }
+          a:hover {
+            color: #000;
+          }
+        }
+        .btns {
+          margin-left: 15%;
+          a {
+            margin-right: 10px;
+            color: #555;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 100px;
+            &:last-of-type {
+              margin-right: 0px;
+            }
+          }
+          a:hover {
+            color: #000;
+          }
+        }
+      }
+      &.on {
+        right: 0%;
+      }
+    }
+  }
+
   #qnalistcont {
     .brd_center {
       table {
@@ -1032,7 +1113,6 @@ body {
       .cardscont {
         width: 90%;
         flex-direction: column;
-
         .cards {
           width: 100%;
           margin: 0px;
@@ -1179,13 +1259,16 @@ body {
 }
 
 @media screen and (max-width: 768px) {
+  #indexwrapper {
+    #sliderFrame {
+      .image img {
+        width: 400px;
+      }
+    }
+  }
   #noticecont {
     .list-wrap {
       .list {
-        .line a {
-        }
-        .line {
-        }
         .line:nth-of-type(1) {
           width: 10%;
         }

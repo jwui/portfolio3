@@ -5,9 +5,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입페이지</title>
+    <link href="/css/loginform.css" rel="stylesheet" />
   </head>
   <body>
-    <form id="joinForm" action="/memberjoin" method="POST">
+    <body class="align">
+      <div class="grid align__item">
+        <div class="register">
+          <img src="/img/logo.svg" />
+
+          <h2 style="margin: 50px">SIGN UP</h2>
+
+          <form action="/memberjoin" method="post" class="form" id="joinForm">
+            <div class="form__field">
+              <div class="validation">
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="아이디 입력"
+                  class="users"
+                  required
+                />
+                <p class="message"></p>
+              </div>
+            </div>
+            <div class="form__field">
+              <div class="validation">
+                <input
+                  type="text"
+                  name="userpass"
+                  placeholder="비밀번호 입력"
+                  class="users"
+                  required
+                />
+                <p class="message"></p>
+              </div>
+            </div>
+
+            <div class="form__field">
+              <input id="joinBtn" type="submit" value="회원가입" />
+            </div>
+          </form>
+
+          <p>아이디가 있으시다면 여기에서 <a href="/login">로그인!</a></p>
+        </div>
+      </div>
+    </body>
+
+    <!-- <form id="joinForm" action="/memberjoin" method="POST">
       <div class="validation">
         <input
           type="text"
@@ -28,7 +72,7 @@
       </div>
       <button id="joinBtn" type="submit">회원가입</button>
       <button id="cancelBtn" type="button">취소</button>
-    </form>
+    </form> -->
     <script>
       //취소버튼 클릭시 메인페이지로 이동
       const cancelBtn = document.querySelector("#cancelBtn");
