@@ -50,7 +50,7 @@ body {
   display: flex;
   height: 100px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   line-height: 50px;
   padding: 30px 40px;
   box-sizing: border-box;
@@ -1015,12 +1015,27 @@ body {
       z-index: 150;
       position: absolute;
       top: 20px;
-      right: 20px;
+      right: 10px;
+      transition: all 0.3s;
       .hamburger-box {
         .hamburger-inner {
         }
       }
     }
+    #mobileBg {
+      z-index: 90;
+      position: absolute;
+      display: none;
+      left: 0px;
+      top: 0px;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.9);
+      &.on {
+        display: block;
+      }
+    }
+
     #mobilemenu {
       display: block;
       position: fixed;
@@ -1045,10 +1060,28 @@ body {
             color: #555;
           }
           &:last-of-type {
-            margin-bottom: 80px;
+            margin-bottom: 40px;
           }
           a:hover {
             color: #000;
+          }
+        }
+        .icons {
+          margin-left: 15%;
+          margin-bottom: 40px;
+          a {
+            font-size: 28px;
+            color: #555;
+            i {
+              transition: all 0.3s;
+              margin-right: 20px;
+            }
+            &:hover {
+              color: #000;
+              i {
+                scale: 1.2;
+              }
+            }
           }
         }
         .btns {
@@ -1070,6 +1103,7 @@ body {
       }
       &.on {
         right: 0%;
+        opacity: 1;
       }
     }
   }

@@ -40,6 +40,7 @@
       <span class="hamburger-inner"></span>
     </span>
   </button>
+  <div id="mobileBg"></div>
   <div id="mobilemenu">
     <ul class="menulist">
       <li><a href="/menus">메뉴</a></li>
@@ -47,6 +48,11 @@
       <li><a href="/events">이벤트</a></li>
       <li><a href="/notice">공지사항</a></li>
       <li><a href="/qnalist">고객의소리</a></li>
+      <div class="icons">
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      </div>
       <div class="btns">
         <% if(!userData) { %>
         <a href="/login">로그인</a>
@@ -60,18 +66,21 @@
 </div>
 <script>
   let header = document.querySelector("#header");
+  let hamburger = document.querySelector(".hamburger");
+  let mobileMenu = document.querySelector("#mobilemenu");
   window.addEventListener("scroll", () => {
     if (scrollY > 20) {
       header.style.height = "80px";
+      hamburger.style.top = "10px";
     } else {
       header.style.height = "100px";
+      hamburger.style.top = "20px";
     }
   });
 
-  let hamburger = document.querySelector(".hamburger");
-  let mobileMenu = document.querySelector("#mobilemenu");
   hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("is-active");
     mobileMenu.classList.toggle("on");
+    mobileBg.classList.toggle("on");
   });
 </script>

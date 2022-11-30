@@ -58,7 +58,7 @@ body {
   display: flex;
   height: 100px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   line-height: 50px;
   padding: 30px 40px;
   box-sizing: border-box;
@@ -962,7 +962,21 @@ body {
     z-index: 150;
     position: absolute;
     top: 20px;
-    right: 20px;
+    right: 10px;
+    transition: all 0.3s;
+  }
+  #header #mobileBg {
+    z-index: 90;
+    position: absolute;
+    display: none;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  #header #mobileBg.on {
+    display: block;
   }
   #header #mobilemenu {
     display: block;
@@ -991,10 +1005,28 @@ body {
     color: #555;
   }
   #header #mobilemenu .menulist li:last-of-type {
-    margin-bottom: 80px;
+    margin-bottom: 40px;
   }
   #header #mobilemenu .menulist li a:hover {
     color: #000;
+  }
+  #header #mobilemenu .menulist .icons {
+    margin-left: 15%;
+    margin-bottom: 40px;
+  }
+  #header #mobilemenu .menulist .icons a {
+    font-size: 28px;
+    color: #555;
+  }
+  #header #mobilemenu .menulist .icons a i {
+    transition: all 0.3s;
+    margin-right: 20px;
+  }
+  #header #mobilemenu .menulist .icons a:hover {
+    color: #000;
+  }
+  #header #mobilemenu .menulist .icons a:hover i {
+    scale: 1.2;
   }
   #header #mobilemenu .menulist .btns {
     margin-left: 15%;
@@ -1014,6 +1046,7 @@ body {
   }
   #header #mobilemenu.on {
     right: 0%;
+    opacity: 1;
   }
   #qnalistcont .brd_center table tbody tr {
     text-align: left;
