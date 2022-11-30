@@ -12,6 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>고객의소리 목록페이지</title>
+
     <link href="/css/styles.css" rel="stylesheet" />
     <link
       rel="stylesheet"
@@ -56,12 +57,12 @@
   </head>
   <body>
     <%- include("common/header.ejs") %>
-    <div id="eventsbg">
+    <div id="eventsbg" data-aos="fade-in">
       <h2>고객의 소리</h2>
     </div>
     <div id="qnalistcont">
       <div class="brd_center">
-        <table>
+        <table class="table">
           <tr>
             <th class="num">번호</th>
             <th class="title">제목</th>
@@ -81,9 +82,12 @@
           </tr>
           <% } %>
         </table>
-        <a href="/qnainsert">게시글작성</a>
+        <a href="/qnainsert" class="btn">게시글작성</a>
       </div>
       <%- include("common/footer.ejs") %>
     </div>
+    <script>
+      AOS.init({ once: true });
+    </script>
   </body>
 </html>

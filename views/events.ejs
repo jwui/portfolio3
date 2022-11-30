@@ -50,13 +50,13 @@
   </head>
   <body>
     <%- include("common/header.ejs") %>
-    <div id="eventsbg">
+    <div id="eventsbg" data-aos="fade-in">
       <h2>Events</h2>
     </div>
     <div id="eventscont">
       <% for(let i=0; i< eventData.length; i++) { %>
 
-      <div class="card">
+      <div class="card" data-aos="fade-up">
         <a href="/eventdetail/<%- eventData[i].num %>">
           <img src="/upload/<%- eventData[i].thumbnail %>" />
         </a>
@@ -68,4 +68,7 @@
     </div>
     <%- include("common/footer.ejs") %>
   </body>
+  <script>
+    AOS.init({ once: true });
+  </script>
 </html>

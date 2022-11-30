@@ -49,12 +49,12 @@
   </head>
   <body>
     <%- include("common/header.ejs") %>
-    <div id="menusbg">
+    <div id="menusbg" data-aos="fade-in">
       <h2>Menus</h2>
     </div>
     <div id="menuscont">
       <% for(let i=0; i< menuData.length; i++) { %>
-      <div class="card">
+      <div class="card" data-aos="fade-up">
         <img src="/upload/<%- menuData[i].thumbnail %>" />
         <a
           href="/menudetail/<%- menuData[i].num %>"
@@ -104,6 +104,8 @@
             .get("/menudetail/" + item.getAttribute("data-number"))
             .then(function (response) {
               // handle success
+              document.querySelector("#detailcont .title").innerHTML =
+                response.data.menuData.name;
               document.querySelector("#detailcont .content").innerHTML =
                 response.data.menuData.content;
               document
@@ -112,7 +114,6 @@
                   "src",
                   "/upload/" + response.data.menuData.thumbnail
                 );
-              console.log(response.data);
               let recomData = response.data.recomData;
               recomData.forEach((item, index) => {
                 console.log(index);
@@ -127,6 +128,8 @@
         });
       });
     </script>
-    <script></script>
+    <script>
+      AOS.init({ once: true });
+    </script>
   </body>
 </html>

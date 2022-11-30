@@ -51,7 +51,7 @@
   <body>
     <%- include("common/header.ejs") %>
     <div id="storecont">
-      <div class="cont1">
+      <div class="cont1" data-aos="fade-in">
         <h2>Store</h2>
       </div>
       <!--처음들어왔을 때 모든 매장 리스트 보여줌-->
@@ -230,7 +230,9 @@
         modalBg.classList.toggle("on");
       });
     </script>
-
     <script src="/js/hangjungdong.js"></script>
+    <script>
+      AOS.init({ once: true });
+    </script>
   </body>
 </html>

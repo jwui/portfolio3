@@ -784,6 +784,7 @@ app.get("/noticedetail/:no", function (req, res) {
 app.get("/qnalist", function (req, res) {
   db.collection("port3_qna")
     .find()
+    .sort({ _id: -1 })
     .toArray(function (err, result) {
       res.render("qnalist", { qnaData: result, userData: req.user });
     });
