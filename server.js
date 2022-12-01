@@ -928,6 +928,38 @@ app.post("/updatecomment", function (req, res) {
   );
 });
 
+//공지사항 수정화면 페이지 get 요청
+app.get("/qnaupt/:no", function (req, res) {
+  //db안에 해당 게시글번호에 맞는 데이터를 꺼내오고 ejs파일로 응답
+  db.collection("port3_qna").findOne(
+    { num: Number(req.params.no) },
+    function (err, result) {
+      res.render("qnaupt", {
+        qnaData: result,
+        userData: req.user,
+      });
+    }
+  );
+  //input, textarea에다가 작성내용 미리 보여줌
+});
+
+//고객의소리 게시글 수정사항 db에 적용하는 구간
+app.post("/qnaupdate", function (req, res) {
+  db.collection("port3_qna").updateOne(
+    { num: Number(req.body.num) },
+    {
+      $set: {
+        title: req.body.title,
+        context: req.body.context,
+      },
+    },
+    //해당 게시글 상세화면 페이지로 이동
+    function (err, result) {
+      res.redirect("/qnadetail/" + req.body.num);
+    }
+  );
+});
+
 //마이페이지(회원정보수정) 페이지 요청 경로
 app.get("/mypage", function (req, res) {
   res.render("mypage", { userData: req.user });

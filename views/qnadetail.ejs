@@ -193,7 +193,7 @@
       <!-- server.js에서 넘겨준 userData에 있는 id와
                  데이터베이스에서 가지고온 qnaData에 있는 데이터가 일치하면 수정 삭제 버튼이 보인다.-->
       <% if(userData.userId === qnaData.author) { %>
-      <a href="">수정</a>
+      <a href="/qnaupt/<%- qnaData.num %>">수정</a>
       <a href="/deleteqna/<%- qnaData.num %>">삭제</a>
       <% } %>
       <a href="/qnalist">목록으로 돌아가기</a>

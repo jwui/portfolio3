@@ -105,6 +105,9 @@ body {
 #header .right .icons a:hover i {
   scale: 1.2;
 }
+#header .right .btns {
+  margin-left: 30px;
+}
 #header .right .btns a {
   width: 120px;
   height: 40px;
@@ -930,6 +933,9 @@ body {
 }
 
 @media screen and (max-width: 1200px) {
+  #header .right .icons {
+    display: none;
+  }
   #noticecont .list-wrap {
     width: 95%;
     margin: 0 auto;
@@ -982,8 +988,8 @@ body {
     display: block;
     position: fixed;
     top: 0px;
-    right: -60%;
-    width: 60%;
+    right: -50%;
+    width: 50%;
     height: 100vh;
     opacity: 1;
     z-index: 100;
@@ -997,7 +1003,7 @@ body {
     height: 100vh;
   }
   #header #mobilemenu .menulist li {
-    margin-left: 15%;
+    margin-left: 10%;
     font-size: 32px;
     line-height: 2;
   }
@@ -1011,7 +1017,7 @@ body {
     color: #000;
   }
   #header #mobilemenu .menulist .icons {
-    margin-left: 15%;
+    margin-left: 10%;
     margin-bottom: 40px;
   }
   #header #mobilemenu .menulist .icons a {
@@ -1029,7 +1035,7 @@ body {
     scale: 1.2;
   }
   #header #mobilemenu .menulist .btns {
-    margin-left: 15%;
+    margin-left: 10%;
   }
   #header #mobilemenu .menulist .btns a {
     margin-right: 10px;
